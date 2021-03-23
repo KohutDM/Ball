@@ -18,9 +18,9 @@ class Arrow {
         let startPoint = this.calcStartPoint(this.fromX, this.fromY, toX, toY, 10)
         this.ctx.moveTo(startPoint[0], startPoint[1]);
         this.ctx.lineTo(toX, toY);
-        // this.ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
-        // this.ctx.moveTo(toX, toY);
-        // this.ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+        this.ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+        this.ctx.moveTo(toX, toY);
+        this.ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
         this.ctx.stroke()
     }
 
