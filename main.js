@@ -17,8 +17,8 @@ function start() {
         17,
         (ctx.canvas.width / 2) - (17 / 2) - 70,
         17 + 500,
-        9,
-        -15,
+        17,
+        -5,
         circleImage
     )
     let arrow = new Arrow(
@@ -30,6 +30,7 @@ function start() {
         )
     let rimX = (ctx.canvas.width / 2) - (1200 / 2) + 1200 - 280
     let rimY = ctx.canvas.height - 50 - 376 - 143 + 105
+    let rimHeight = 20
     let boardX = (ctx.canvas.width / 2) - (1200 / 2) + 1200 - 200
     let rects = [
         // bottom
@@ -41,7 +42,7 @@ function start() {
         // board
         new Rect(ctx, 10, 133, boardX, ctx.canvas.height - 50 - 376 - 143, rectImage, 'board'),
         // rim
-        new Rect(ctx, 3, 20,  rimX, rimY, rectImage, 'rim'),
+        new Rect(ctx, 3, rimHeight,  rimX, rimY, rectImage, 'rim'),
         // left
         new Rect(ctx, 50, 890, (ctx.canvas.width / 2) - (1200 / 2), ctx.canvas.height - 890, rectImage, 'left')
     ]
@@ -93,7 +94,13 @@ function start() {
     }
 
     function checkScore() {
-        if (!stopScoreChecking && circle.circleX > rimX && circle.circleX < boardX && circle.circleY > rimY && circle.speedY > 0) {
+        if (!stopScoreChecking
+            && circle.circleX > rimX
+            && circle.circleX < boardX
+            && circle.circleY > rimY
+            && circle.circleY < rimY + rimHeight
+            && circle.speedY > 0
+        ) {
             debugMode ? console.log('SCORE') : null
             score++
             stopScoreChecking = true
