@@ -2,8 +2,6 @@ const g = 9.8
 const frictionF = 0.894
 const speedDecelerateIndexY = 0.894
 const speedDecelerateIndexX = 0.90
-const speedCollisionDecelerateIndex = 0.95
-const speedCollisionAngleAccelerateXIndex = 1.5
 const frequency = 1 / 60
 const collisionTypes = {
     'top': 1,
@@ -14,6 +12,9 @@ const collisionTypes = {
     'r_inside_c': 6,
     'angle': 7
 }
+const collisionTypesNames = [
+    'top', 'right', 'bottom', 'left', 'c_inside_r', 'r_inside_c', 'angle'
+]
 const debugMode = true
 const groundYShift = 50
 const spinYIndex = 1.7

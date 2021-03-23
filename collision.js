@@ -1,18 +1,22 @@
 function calcFlyThroughRectCollision(rect, circle) {
     let rectLines = {
+        // version with diagonals
         0: {x1: rect.rectX, y1: rect.rectY, x2: rect.rectX + rect.rectWidth, y2: rect.rectY + rect.rectHeight},
         1: {x1: rect.rectX, y1: rect.rectY + rect.rectHeight, x2: rect.rectX + rect.rectWidth, y2: rect.rectY}
-        // 0: {x1: rect.rectX, y1: rect.rectY, x2: rect.rectX + rect.rectWidth, y2: rect.rectY},
-        // 1: {x1: rect.rectX + rect.rectWidth, y1: rect.rectY, x2: rect.rectX + rect.rectWidth, y2: rect.rectY + rect.rectHeight},
-        // 2: {x1: rect.rectX, y1: rect.rectY, x2: rect.rectX, y2: rect.rectY + rect.height},
-        // 3: {x1: rect.rectX, y1: rect.rectY + rect.rectHeight, x2: rect.rectX + rect.rectWidth, y2: rect.rectY + rect.rectHeight}
+        // version with sides
+        /** 0: {x1: rect.rectX, y1: rect.rectY, x2: rect.rectX + rect.rectWidth, y2: rect.rectY},
+         1: {x1: rect.rectX + rect.rectWidth, y1: rect.rectY, x2: rect.rectX + rect.rectWidth, y2: rect.rectY + rect.rectHeight},
+         2: {x1: rect.rectX, y1: rect.rectY, x2: rect.rectX, y2: rect.rectY + rect.height},
+         3: {x1: rect.rectX, y1: rect.rectY + rect.rectHeight, x2: rect.rectX + rect.rectWidth, y2: rect.rectY + rect.rectHeight} */
     }
     let circleLines = {
+        // version with top, right, bottom and left sides
         0: {x1: circle.circleX, y1: circle.circleY - circle.circleRadius, x2: circle.circleXBeforeMove, y2: circle.circleYBeforeMove - circle.circleRadius},
         1: {x1: circle.circleX + circle.circleRadius, y1: circle.circleY, x2: circle.circleXBeforeMove + circle.circleRadius, y2: circle.circleYBeforeMove},
         2: {x1: circle.circleX, y1: circle.circleY + circle.circleRadius, x2: circle.circleXBeforeMove, y2: circle.circleYBeforeMove + circle.circleRadius},
         3: {x1: circle.circleX - circle.circleRadius, y1: circle.circleY, x2: circle.circleXBeforeMove - circle.circleRadius, y2: circle.circleYBeforeMove}
-        // 0: {x1: circle.circleX, y1: circle.circleY, x2: circle.circleXBeforeMove, y2: circle.circleYBeforeMove}
+        // version with circle center
+        /** 0: {x1: circle.circleX, y1: circle.circleY, x2: circle.circleXBeforeMove, y2: circle.circleYBeforeMove} */
     }
     let collisionResult = false
     for (let i = 0; rectLines.hasOwnProperty(i); i++) {
@@ -39,71 +43,65 @@ function calcFlyThroughRectCollision(rect, circle) {
     return collisionResult
 }
 
-function lineIntersect(x1,y1,x2,y2, x3,y3,x4,y4) {
-    var x=((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
-    var y=((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+function lineIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+    var x = (
+        (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    )
+    var y = (
+        (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    )
     if (isNaN(x)||isNaN(y)) {
         return false;
     } else {
-        if (x1<=x2) {
-            if (!(x2>=x&&x>=x1)) {return false;}
+        if (x1 <= x2) {
+            if (!(x2 >= x && x >= x1)) return false
         } else {
-            if (!(x1>=x&&x>=x2)) {return false;}
+            if (!(x1 >= x && x >= x2)) return false
         }
-        if (y1<=y2) {
-            if (!(y2>=y&&y>=y1)) {return false;}
+        if (y1 <= y2) {
+            if (!(y2 >= y && y >= y1)) return false
         } else {
-            if (!(y1>=y&&y>=y2)) {return false;}
+            if (!(y1>=y&&y>=y2)) return false
         }
-        if (x3<=x4) {
-            if (!(x4>=x&&x>=x3)) {return false;}
+        if (x3 <= x4) {
+            if (!(x4 >= x && x >= x3)) return false
         } else {
-            if (!(x3>=x&&x>=x4)) {return false;}
+            if (!(x3 >= x && x >= x4)) return false
         }
-        if (y3<=y4) {
-            if (!(y4>=y&&y>=y3)) {return false;}
+        if (y3 <= y4) {
+            if (!(y4 >= y && y >= y3)) return false
         } else {
-            if (!(y3>=y&&y>=y4)) {return false;}
+            if (!(y3 >= y && y >= y4)) return false
         }
     }
 
-    // if (!getCrossPoint(x1,y1,x2,y2, x3,y3,x4,y4)) {
-    //     return false
-    // }
+    // Fix with potencial perpendicular straight lines
+     /** if (!getCrossPoint(x1, y1, x2, y2, x3, y3, x4, y4)) {
+         return false
+     } */
 
     return true;
 }
 
-// function getCrossPoint(x1,y1,x2,y2, x3,y3,x4,y4) {
-//     if ( Math.min(x1, x2) >= x3 || Math.max(x1, x2) <= x3
-//         || Math.min(y3, y4) >= y1 || Math.max(y3, y4) <= y1) {
-//         return false
-//     } else
-//         return true
-// }
+// Fix with potencial perpendicular straight lines
+/** function getCrossPoint(x1, y1, x2, y2, x3, y3, x4, y4) {
+    return (Math.min(x1, x2) >= x3 || Math.max(x1, x2) <= x3
+        || Math.min(y3, y4) >= y1 || Math.max(y3, y4) <= y1)
+} */
 
 function calcCollision(rect, circle) {
-    var iter = 0
-    // if (collision(rect, circle).length === 0) {
-    //     while (calcFlyThroughRectCollision(rect, circle)) {
     if (calcFlyThroughRectCollision(rect, circle)) {
+        let flyThroughIter = 0
         let tempX = circle.circleXBeforeMove
         let tempY = circle.circleYBeforeMove
         while (collision(rect, circle).length === 0) {
-            debugMode ? console.log(`FlyThrough. ${rect.name} rX ${rect.rectX} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} loop ${iter}`) : null
-            debugMode ? iter++ : null
-            // circle.speedX = circle.speedX * speedCollisionDecelerateIndex
-            // circle.speedY = circle.speedY * speedCollisionDecelerateIndex
-            // circle.circleX = circle.circleXBeforeMove + circle.speedX
-            // circle.circleY = circle.circleYBeforeMove + circle.speedY
-            circle.circleX = tempX + circle.speedX / 10
-            circle.circleY = tempY + circle.speedY / 10
+            debugMode ? console.log(`FlyThrough. ${rect.name} rX ${rect.rectX} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} cYspeed ${circle.speedY} loop ${flyThroughIter}`) : null
+            circle.circleX = tempX + circle.speedX / 100
+            circle.circleY = tempY + circle.speedY / 100
             tempX = circle.circleX
             tempY = circle.circleY
-            debugMode ? console.log(`Change into ${rect.name} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} loop ${iter}`) : null
-            iter++
-            // }
-            // }
+            debugMode ? console.log(`Change into ${rect.name} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} cYspeed ${circle.speedY} loop ${flyThroughIter}`) : null
+            debugMode ? flyThroughIter++ : null
         }
     }
     let collisions = collision(rect, circle)
@@ -111,7 +109,7 @@ function calcCollision(rect, circle) {
         collisions = sortByMainCollision(collisions, circle)
         let collisionType = parseInt(collisions.pop())
 
-        debugMode ? console.log(`collisionType: ${collisionType} with ${rect.name}`) : null
+        debugMode ? console.log(`collisionType "${collisionTypesNames[collisionType - 1]}" with ${rect.name}`) : null
 
         switch (collisionType) {
             case collisionTypes.top:
@@ -149,72 +147,38 @@ function calcCollision(rect, circle) {
                 circle.circleX = rect.rectX - circle.circleRadius - 1
                 circle.collisionFromStart++
                 break
-            case collisionTypes.c_inside_r:
-                var iter = 0
-                var tempX = circle.circleXBeforeMove
-                var tempY = circle.circleYBeforeMove
+            case collisionTypes.c_inside_r || collisionTypes.r_inside_c:
+                let insideIter = 0
+                debugMode
+                    ? collisionTypes.c_inside_r
+                    ? console.log(`Inside ${rect.name} rX ${rect.rectX} cY ${circle.circleY} cX ${circle.circleX + circle.circleRadius} cXspeed ${circle.speedX} cYspeed ${circle.speedY} loop ${insideIter}`)
+                    : console.log(`${rect.name} inside rX ${rect.rectX} cY ${circle.circleY} cX ${circle.circleX + circle.circleRadius} cXspeed ${circle.speedX} cYspeed ${circle.speedY} loop ${insideIter}`)
+                    : null
+                let tempX = circle.circleXBeforeMove
+                let tempY = circle.circleYBeforeMove
                 do {
-                    debugMode ? console.log(`Inside ${rect.name} rX ${rect.rectX} cY ${circle.circleY} cX ${circle.circleX + circle.circleRadius} cXspeed ${circle.speedX} loop ${iter}`) : null
-                    debugMode ? iter++ : null
-                    circle.circleX = tempX + circle.speedX / (iter > 2 ? 10 : 10 * iter)
-                    circle.circleY = tempY + circle.speedY / (iter > 2 ? 10 : 10 * iter)
+                    circle.circleX = tempX + circle.speedX / 2 // too fast(insideIter > 2 ? 10 : 10 * insideIter)
+                    circle.circleY = tempY + circle.speedY / 2 // too fast (insideIter > 2 ? 10 : 10 * insideIter)
                     tempX = circle.circleX
                     tempY = circle.circleY
-                    debugMode ? console.log(`Change into ${rect.name} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} loop ${iter}`) : null
-                    iter++
-                } while (collision(rect, circle).hasOwnProperty('top')
-                    || collision(rect, circle).hasOwnProperty('right')
-                    || collision(rect, circle).hasOwnProperty('bottom')
-                    || collision(rect, circle).hasOwnProperty('left')
+                    debugMode ? console.log(`Change into ${rect.name} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} cYspeed ${circle.speedY} loop ${insideIter}`) : null
+                    debugMode ? insideIter++ : null
+                } while (collision(rect, circle).hasOwnProperty(collisionTypesNames[0])
+                    || collision(rect, circle).hasOwnProperty(collisionTypesNames[1])
+                    || collision(rect, circle).hasOwnProperty(collisionTypesNames[2])
+                    || collision(rect, circle).hasOwnProperty(collisionTypesNames[3])
                     )
-                // circle.speedX = circle.speedX * speedDecelerateIndexX
-                // circle.speedY = circle.speedY * speedDecelerateIndexY
-                // circle.circleX = circle.circleXBeforeMove
-                // circle.circleY = circle.circleYBeforeMove
-                // calcCollision(rect, circle)
-                calcCollision(rect, circle)
-                break
-            // case collisionTypes.r_inside_c_angle:
-            case collisionTypes.r_inside_c:
-                var iter = 0
-                var tempX = circle.circleXBeforeMove
-                var tempY = circle.circleYBeforeMove
-                do {
-                    debugMode ? console.log(`${rect.name} inside rX ${rect.rectX} cY ${circle.circleY} cX ${circle.circleX + circle.circleRadius} cXspeed ${circle.speedX} loop ${iter}`) : null
-                    debugMode ? iter++ : null
-                    circle.circleX = tempX + circle.speedX / (iter > 2 ? 10 : 10 * iter)
-                    circle.circleY = tempY + circle.speedY / (iter > 2 ? 10 : 10 * iter)
-                    tempX = circle.circleX
-                    tempY = circle.circleY
-                    debugMode ? console.log(`Change into ${rect.name} cY ${circle.circleY} cX ${circle.circleX} cXspeed ${circle.speedX} loop ${iter}`) : null
-                    iter++
-                } while (collision(rect, circle).hasOwnProperty('top')
-                    || collision(rect, circle).hasOwnProperty('right')
-                    || collision(rect, circle).hasOwnProperty('bottom')
-                    || collision(rect, circle).hasOwnProperty('left')
-                    )
-                // circle.speedX = circle.speedX * speedCollisionAngleAccelerateXIndex
-                // circle.speedY = circle.speedY * speedCollisionDecelerateIndex
-                // circle.circleX = circle.circleXBeforeMove
-                // circle.circleY = circle.circleYBeforeMove
                 calcCollision(rect, circle)
                 break
             case collisionTypes.angle:
-                // circle.speedY = -circle.speedY * speedDecelerateIndexY
                 circle.speedX = -circle.speedX * speedDecelerateIndexY
                 circle.circleX = rect.rectX + rect.rectWidth + circle.circleRadius
                 circle.collisionFromStart++
                 break
-            // }
         }
     }
 
     function collision(rect, circle) {
-        // let nearAngleX
-        // let nearAngleY
-        // let distanceX
-        // let distanceY
-        // let distance
         let collisions = []
 
         // collision with top
@@ -258,6 +222,11 @@ function calcCollision(rect, circle) {
             collisions[collisionTypes.r_inside_c] = collisionTypes.r_inside_c
         }
         // collision circle inside rect
+        let nearAngleX
+        let nearAngleY
+        let distanceX
+        let distanceY
+        let distance
         if (circle.circleX > rect.rectX
             && circle.circleX < rect.rectX + rect.rectWidth
             && circle.circleY > rect.rectY
@@ -302,8 +271,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.bottom] = collisionTypes.bottom
             }
-
-            // return
         }
         // moving right and up
         if (circle.speedY < 0 && circle.speedX > 0) {
@@ -311,8 +278,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.left] = collisionTypes.left
             }
-
-            // return collisions
         }
         // moving right
         if (circle.speedY === 0 && circle.speedX > 0) {
@@ -320,8 +285,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.left] = collisionTypes.left
             }
-
-            // return collisions
         }
         // moving right and down
         if (circle.speedY > 0 && circle.speedX > 0) {
@@ -329,8 +292,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.left] = collisionTypes.left
             }
-
-            // return collisions
         }
         // moving down
         if (circle.speedY > 0 && circle.speedX === 0) {
@@ -338,8 +299,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.top] = collisionTypes.top
             }
-
-            // return collisions
         }
         // moving left and down
         if (circle.speedY > 0 && circle.speedX < 0) {
@@ -347,8 +306,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.right] = collisionTypes.right
             }
-
-            // return collisions
         }
         // moving left
         if (circle.speedY === 0 && circle.speedX < 0) {
@@ -356,8 +313,6 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.right] = collisionTypes.right
             }
-
-            // return collisions
         }
         // moving left and up
         if (circle.speedY < 0 && circle.speedX < 0) {
@@ -365,15 +320,7 @@ function calcCollision(rect, circle) {
                 collisions.splice(0, collisions.length)
                 collisions[collisionTypes.right] = collisionTypes.right
             }
-
-            // return collisions
         }
-        // set angle collision
-        // if (collisions[collisionTypes.r_inside_c_angle]) {
-        //     // debugger
-        //     collisions.splice(0, collisions.length)
-        //     collisions[collisionTypes.r_inside_c_angle] = collisionTypes.r_inside_c_angle
-        // }
 
         return collisions
     }
