@@ -68,7 +68,7 @@ class Arrow {
         }
     }
 
-    handleMouseEnter(event) {
+    handleMouseClick(event) {
         if (!this.isDirectionChosen) {
             this.circle.speedX = 17
             this.circle.speedY = -3

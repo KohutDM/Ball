@@ -48,13 +48,10 @@ function start() {
     )
     document.onmousemove = handleMouseMove
     document.addEventListener("click", function (event) {
-        handleMouseEnter()
+        arrow.handleMouseClick()
     })
     function handleMouseMove(event) {
         arrow.handleMouseMove(event)
-    }
-    function handleMouseEnter(event) {
-        arrow.handleMouseEnter(event)
     }
 
     requestAnimationFrame(gameLoop)
