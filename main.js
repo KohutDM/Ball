@@ -16,7 +16,7 @@ function start() {
         ctx,
         circleImage,
         17,
-        (ctx.canvas.width / 2) - (17 / 2) - 70,
+        (ctx.canvas.width / 2) - (17 / 2) - 370,
         17 + 500
     )
     let rimX = (ctx.canvas.width / 2) - (1200 / 2) + 1200 - 280

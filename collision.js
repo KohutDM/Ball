@@ -125,7 +125,7 @@ function calcCollision(rect, circle) {
                 circle.speedX = -circle.speedX * speedDecelerateIndexX
                 if (circle.collisionFromStart === 0) {
                     debugMode ? console.log('spin') : null
-                    circle.speedY = -circle.speedY * spinYIndex
+                    circle.speedY = circle.speedY * spinYIndex
                     circle.speedX = circle.speedX * spinXIndex
                 }
                 circle.circleX = rect.rectX + rect.rectWidth + circle.circleRadius + 1
@@ -141,7 +141,7 @@ function calcCollision(rect, circle) {
                 debugMode ? console.log(`collision from start: ${circle.collisionFromStart}`) : null
                 if (circle.collisionFromStart === 0) {
                     debugMode ? console.log('spin') : null
-                    circle.speedY = -circle.speedY * spinYIndex
+                    circle.speedY = circle.speedY * spinYIndex
                     circle.speedX = circle.speedX * spinXIndex
                 }
                 circle.circleX = rect.rectX - circle.circleRadius - 1
@@ -172,6 +172,7 @@ function calcCollision(rect, circle) {
                 break
             case collisionTypes.angle:
                 circle.speedX = -circle.speedX * speedDecelerateIndexY
+                rect.name === 'board' ? circle.speedY = -circle.speedY * speedDecelerateIndexY : null
                 circle.circleX = rect.rectX + rect.rectWidth + circle.circleRadius
                 circle.collisionFromStart++
                 break

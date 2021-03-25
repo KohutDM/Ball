@@ -15,9 +15,9 @@ const collisionTypes = {
 const collisionTypesNames = [
     'top', 'right', 'bottom', 'left', 'c_inside_r', 'r_inside_c', 'angle'
 ]
-const debugMode = false
+const debugMode = true
 const groundYShift = 50
-const spinYIndex = 1.7
+const spinYIndex = 1.2
 const spinXIndex = 0.7
 let loopNumber = 0
 let score = 0
