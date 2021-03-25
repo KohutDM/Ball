@@ -214,10 +214,10 @@ function calcCollision(rect, circle) {
             collisions[collisionTypes.right] = collisionTypes.right
         }
         // collision rect inside circle
-        if (collisions.hasOwnProperty('top')
-            && collisions.hasOwnProperty('right')
-            && collisions.hasOwnProperty('bottom')
-            && collisions.hasOwnProperty('left')
+        if (collisions.hasOwnProperty(collisionTypesNames[0])
+            && collisions.hasOwnProperty(collisionTypesNames[1])
+            && collisions.hasOwnProperty(collisionTypesNames[2])
+            && collisions.hasOwnProperty(collisionTypesNames[3])
         ) {
             collisions[collisionTypes.r_inside_c] = collisionTypes.r_inside_c
         }

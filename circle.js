@@ -1,5 +1,5 @@
 class Circle {
-    constructor(ctx, circleRadius, circleX, circleY, speedX, speedY, image) {
+    constructor(ctx, image, circleRadius, circleX, circleY, speedX = 0, speedY = 0) {
         this.ctx = ctx
         this.circleRadius = circleRadius
         this.circleX = circleX
@@ -40,6 +40,8 @@ class Circle {
     }
 
     draw() {
+        this.ctx.beginPath();
+        this.ctx.globalAlpha = 1;
         this.ctx.arc(this.circleX, this.circleY, this.circleRadius, 0, 2 * Math.PI);
         this.ctx.fillStyle = this.imagePattern
         this.ctx.translate(this.circleX + 80, this.circleY + 80);

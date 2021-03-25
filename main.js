@@ -14,20 +14,11 @@ function start() {
     let background = new Background(ctx, '#005580', backgroundImage)
     let circle = new Circle(
         ctx,
+        circleImage,
         17,
         (ctx.canvas.width / 2) - (17 / 2) - 70,
-        17 + 500,
-        17,
-        -5,
-        circleImage
+        17 + 500
     )
-    let arrow = new Arrow(
-        ctx,
-        circle.circleX + circle.circleRadius,
-        circle.circleY + circle.circleRadius,
-        100,
-        270
-        )
     let rimX = (ctx.canvas.width / 2) - (1200 / 2) + 1200 - 280
     let rimY = ctx.canvas.height - 50 - 376 - 143 + 105
     let rimHeight = 20
@@ -48,6 +39,23 @@ function start() {
     ]
     let time = {start: 0, elapsed: 0, frequency: frequency}
     time.start = performance.now();
+    let arrow = new Arrow(
+        ctx,
+        circle,
+        circle.circleX,
+        circle.circleY,
+        120,
+    )
+    document.onmousemove = handleMouseMove
+    document.addEventListener("click", function (event) {
+        handleMouseEnter()
+    })
+    function handleMouseMove(event) {
+        arrow.handleMouseMove(event)
+    }
+    function handleMouseEnter(event) {
+        arrow.handleMouseEnter(event)
+    }
 
     requestAnimationFrame(gameLoop)
 
@@ -62,7 +70,7 @@ function start() {
         if (time.elapsed > time.frequency) {
             loopNumber++
             time.start = timeStamp
-            update()
+            if (arrow.isPowerChosen) update()
             draw()
         }
         if (!die) {
@@ -109,18 +117,13 @@ function start() {
 
     function draw() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-        ctx.beginPath();
         // draw background
-        ctx.globalAlpha = 0.5
         background.draw()
-        ctx.globalAlpha = 1;
         // draw rects
         rects.forEach(rect => rect.draw())
+        // draw arrow
+        arrow.draw()
         // draw circle
         circle.draw()
-        // draw arrow
-        // ctx.beginPath();
-        // ctx.lineWidth = 5;
-        // arrow.draw()
     }
 }

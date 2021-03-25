@@ -11,6 +11,8 @@ class Rect {
     }
 
     draw () {
+        this.ctx.beginPath();
+        this.ctx.globalAlpha = 1
         this.ctx.fillStyle = this.imagePattern
         this.ctx.fillRect(this.rectX, this.rectY, this.rectWidth, this.rectHeight);
     }
