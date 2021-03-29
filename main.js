@@ -3,8 +3,8 @@ backgroundImage.src = "images/gsv.png";
 let rectImage = new Image();
 rectImage.src = "images/rect2.jpg";
 let circleImage = new Image();
-circleImage.src = "images/circle.jpg";
-setTimeout(start, 100)
+circleImage.src = "images/circle.png";
+setTimeout(start, 200)
 
 function start() {
     let ctx = document.getElementById("circle_rect").getContext("2d");
@@ -15,8 +15,10 @@ function start() {
     let circle = new Circle(
         ctx,
         circleImage,
+        33,
+        33,
         17,
-        (ctx.canvas.width / 2) - (17 / 2) - 370,
+        (ctx.canvas.width / 2) - (17 / 2) - 500,
         17 + 500
     )
     let rimX = (ctx.canvas.width / 2) - (1200 / 2) + 1200 - 280

@@ -1,5 +1,5 @@
 class Circle {
-    constructor(ctx, image, circleRadius, circleX, circleY, speedX = 0, speedY = 0) {
+    constructor(ctx, image, circleImageWidth, circleImageHeight, circleRadius, circleX, circleY, speedX = 0, speedY = 0) {
         this.ctx = ctx
         this.circleRadius = circleRadius
         this.circleX = circleX
@@ -8,9 +8,11 @@ class Circle {
         this.speedY = speedY
         this.circleXBeforeMove = this.circleX
         this.circleYBeforeMove = this.circleY
-        this.image = image;
+        this.image = image
+        this.circleImageWidth = circleImageWidth
+        this.circleImageHeight = circleImageHeight
         this.collisionFromStart = 0
-        this.imagePattern = this.ctx.createPattern(this.image, 'repeat');
+        this.rad = 1
         this.updateDistanceAboveTheGround()
     }
 
@@ -40,12 +42,29 @@ class Circle {
     }
 
     draw() {
+        let deg = this.speedX * 4
         this.ctx.beginPath();
         this.ctx.globalAlpha = 1;
-        this.ctx.arc(this.circleX, this.circleY, this.circleRadius, 0, 2 * Math.PI);
-        this.ctx.fillStyle = this.imagePattern
-        this.ctx.translate(this.circleX + 80, this.circleY + 80);
-        this.ctx.fill()
-        this.ctx.translate(-this.circleX - 80, -this.circleY - 80);
+        // Store the current context state (i.e. rotation, translation etc..)
+        this.ctx.save()
+        //Convert degrees to radian
+        this.rad += deg * Math.PI / 180;
+        //Set the origin to the center of the image
+        this.ctx.translate(
+            this.circleX + this.circleImageWidth / 2 - this.circleRadius,
+            this.circleY + this.circleImageHeight / 2 - this.circleRadius
+        )
+        //Rotate the canvas around the origin
+        this.ctx.rotate(this.rad);
+        //draw the image
+        this.ctx.drawImage(
+            this.image,
+            this.circleImageWidth / 2 * (-1),
+            this.circleImageHeight / 2 * (-1),
+            this.circleImageWidth,
+            this.circleImageHeight
+        )
+        // Restore canvas state as saved from above
+        this.ctx.restore()
     }
 }

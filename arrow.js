@@ -50,7 +50,7 @@ class Arrow {
             this.ctx.beginPath()
             this.ctx.fillStyle = 'red'
             this.ctx.fillRect(this.toX,this.toY + 180, 15, -this.powerIter);
-            this.powerUp ? this.powerIter = this.powerIter + 2 : this.powerIter = this.powerIter - 2
+            this.powerUp ? this.powerIter = this.powerIter + 4 : this.powerIter = this.powerIter - 4
         }
     }
 
@@ -74,10 +74,12 @@ class Arrow {
 
             return
         }
-        let anglePercent = (this.angle - 180) / 100
-        this.circle.speedX = this.powerIter / 10 * (1 -anglePercent)
-        this.circle.speedY = -this.powerIter / 10 * ((anglePercent))
-        debugMode ? console.log(`Angle percent:${anglePercent * 100} cSpeedX:${this.circle.speedX} cSpeedY:${this.circle.speedY}`) : null
-        this.isPowerChosen = true
+        if (!this.isPowerChosen) {
+            let anglePercent = (this.angle - 180) / 100
+            this.circle.speedX = this.powerIter / 10 * (1 -anglePercent)
+            this.circle.speedY = -this.powerIter / 10 * ((anglePercent))
+            debugMode ? console.log(`Angle percent:${anglePercent * 100} cSpeedX:${this.circle.speedX} cSpeedY:${this.circle.speedY}`) : null
+            this.isPowerChosen = true
+        }
     }
 }
