@@ -17,7 +17,7 @@ const collisionTypesNames = [
 ]
 const debugMode = true
 const groundYShift = 50
-const spinYIndex = 1.7
+const spinYIndex = 1.2
 const spinXIndex = 0.7
 let loopNumber = 0
 let score = 0

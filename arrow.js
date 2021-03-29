@@ -1,55 +1,85 @@
 class Arrow {
-    constructor(ctx, fromX, fromY, length, angle) {
+    constructor(ctx, circle, fromX, fromY, length, angle = 270) {
         this.ctx = ctx
         this.fromX = fromX
         this.fromY = fromY
         this.length = length
         this.angle = angle
+        this.circle = circle
+        this.toY = this.fromY + Math.sin(this.angle * Math.PI/180) * this.length
+        this.toX = this.fromX - Math.cos(this.angle * Math.PI/180) * this.length
+        this.isDirectionChosen = false
+        this.isPowerChosen = false
+        this.powerIter = 1
     }
 
     draw() {
-        let toY = this.fromY + Math.sin(this.angle * Math.PI/180) * this.length
-        let toX = this.fromX - Math.cos(this.angle * Math.PI/180) * this.length
-        let headlen = 10; // length of head in pixels
-        let dx = toX - this.fromX;
-        let dy = toY - this.fromY;
-        let angle = Math.atan2(dy, dx);
-        this.ctx.strokeStyle = 'red'
-        let startPoint = this.calcStartPoint(this.fromX, this.fromY, toX, toY, 10)
-        this.ctx.moveTo(startPoint[0], startPoint[1]);
-        this.ctx.lineTo(toX, toY);
-        this.ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
-        this.ctx.moveTo(toX, toY);
-        this.ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
-        this.ctx.stroke()
+        if (!this.isDirectionChosen) {
+            this.ctx.globalAlpha = 0.6
+            this.ctx.lineWidth = 3;
+            this.ctx.strokeStyle = 'red'
+            this.ctx.beginPath();
+            this.ctx.arc(this.toX, this.toY, 16, 0, 2 * Math.PI);
+            this.ctx.stroke()
+            this.ctx.beginPath();
+            this.ctx.globalAlpha = 0.3
+            this.ctx.lineWidth = 2;
+            this.ctx.arc(this.toX, this.toY, 12, 0, 2 * Math.PI);
+            this.ctx.stroke()
+            this.ctx.beginPath();
+            this.ctx.arc(this.toX, this.toY, 8, 0, 2 * Math.PI);
+            this.ctx.stroke()
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.fromX, this.fromY);
+            this.ctx.lineTo(this.toX, this.toY);
+            this.ctx.stroke()
+
+            return
+        }
+        if (!this.isPowerChosen) {
+            this.powerIter > 180 ? this.powerIter = 180 : null
+            this.powerIter < 1 ? this.powerIter = 1 : null
+            this.powerIter === 180 ? this.powerUp = false : null
+            this.powerIter === 1 ? this.powerUp = true : null
+            this.ctx.beginPath()
+            this.ctx.globalAlpha = 1
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeStyle = 'red'
+            this.ctx.rect(this.toX,this.toY, 15, 180);
+            this.ctx.stroke()
+            this.ctx.beginPath()
+            this.ctx.fillStyle = 'red'
+            this.ctx.fillRect(this.toX,this.toY + 180, 15, -this.powerIter);
+            this.powerUp ? this.powerIter = this.powerIter + 4 : this.powerIter = this.powerIter - 4
+        }
     }
 
-//     PointF GetOrtogonalPoint(PointF a, PointF b, float bc)
-// {
-//     float x2x1 = a.X - b.X;
-//     float y2y1 = a.Y - b.Y;
-//     float ab = (float)Math.Sqrt(x2x1 * x2x1 + y2y1 * y2y1);
-//     float v1x = (b.X - a.X) / ab;
-//     float v1y = (b.Y - a.Y) / ab;
-//     float v3x = (v1y > 0 ? -v1y : v1y) * bc;
-//     float v3y = (v1x > 0 ? v1x : -v1x) * bc;
-//
-//     PointF c = new PointF();
-//     c.X = a.X + v3x;
-//     c.Y = a.Y + v3y;
-//     return c;
-// }
-    calcStartPoint(aX, aY, bX, bY, bc) {
-        let x2x1 = aX - bX
-        let y2y1 = aY - bY
-        let ab = Math.sqrt(x2x1 * x2x1 + y2y1 *y2y1)
-        let v1x = (bX - aX) / ab
-        let v1y = (bY - aY) / ab
-        let v3x = (v1y > 0 ? -v1y : v1y) * bc
-        let v3y = (v1x > 0 ? -v1x : v1x) * bc
-        let cX = aX + v3x
-        let cY = aX + v3y
-// debugger
-        return [cX, cY]
+    handleMouseMove(event) {
+        if (!this.isDirectionChosen) {
+            let aSide = event.clientX - this.fromX
+            let bSide = this.fromY - event.clientY
+            if (event.clientX > this.fromX && bSide > 0) {
+                let cSide = Math.sqrt(aSide * aSide + bSide * bSide)
+                this.angle = Math.sin(bSide / cSide) * (340 / Math.PI) + 179
+                this.toY = this.fromY + Math.sin(this.angle * Math.PI/180) * this.length
+                this.toX = this.fromX - Math.cos(this.angle * Math.PI/180) * this.length
+                debugMode ? console.log(`MX:${event.clientX} MY:${event.clientY} aS:${aSide.toFixed(0)} bS:${bSide.toFixed(0)} cS:${cSide.toFixed(0)} angle ${this.angle.toFixed(0)}`) : null
+            }
+        }
+    }
+
+    handleMouseClick(event) {
+        if (!this.isDirectionChosen) {
+            this.isDirectionChosen = true
+
+            return
+        }
+        if (!this.isPowerChosen) {
+            let anglePercent = (this.angle - 180) / 100
+            this.circle.speedX = this.powerIter / 10 * (1 -anglePercent)
+            this.circle.speedY = -this.powerIter / 10 * ((anglePercent))
+            debugMode ? console.log(`Angle percent:${anglePercent * 100} cSpeedX:${this.circle.speedX} cSpeedY:${this.circle.speedY}`) : null
+            this.isPowerChosen = true
+        }
     }
 }
